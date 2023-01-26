@@ -15,14 +15,29 @@ query = {
   'token': config.api_token,
 }
 
-def get_label_id_by_name(boardId = '61f2d57bc0130938a690edd4', name = "personal"):
-	url = 'https://api.trello.com/1/board/{}/labels'.format(boardId)
-
-	response = requests.request(
+def get(url, params = []):
+	query.update(query)
+	return requests.request(
 		"GET",
 		url,
 		params = query
 	).json()
+
+def post(url, params):
+	query.update(query)
+	return requests.request(
+		"POST",
+		url,
+		params = query
+	).json()
+	
+# Labels
+
+def get_label_id_by_name(boardId = '61f2d57bc0130938a690edd4', name = "personal"):
+	url = 'https://api.trello.com/1/board/{}/labels'.format(boardId)
+
+	response = get(url)
+
 	for label in response:
 		if label['name'] == name:
 			return label['id']
@@ -34,6 +49,8 @@ def create_idLabels_from_names(names):
 
 	return ids
 
+# Cards
+
 def create_new_card(name, due, idLabels, idList = '61f2d57bc0130938a690edd5'):
 	url = 'https://api.trello.com/1/cards'
 
@@ -42,34 +59,24 @@ def create_new_card(name, due, idLabels, idList = '61f2d57bc0130938a690edd5'):
 	query['idList'] = idList
 	query['idLabels'] = idLabels
 
-	response = requests.request(
-		"POST",
-		url,
-		params = query
-	)
-	print(response.text)
+	print(post(url, query))
 
-def get_cards(idList):
-	print('')
+# Lists
 
-def get_list_id(boardId):
-	url = "https://api.trello.com/1/boards/{boardId}/lists"
-	response = requests.request(
-		"GET",
-		url,
-		params=query
-	)
+def get_lists_from_board(boardId):
+	url = "https://api.trello.com/1/boards/{}/lists".format(boardId)
+	return get(url)
 
-	print(response.text)
+# Boards
 
 def get_boards():
 	url = 'https://api.trello.com/1/'
 	url += 'members/me/boards'
-	response = requests.request(
-		"GET",
-		url,
-		params=query
-	)
-	print(response.text)
+	return get(url)
+create_new_card("TESTING", "2023-01-22T11:59:59Z", get_label_id_by_name())
 
+# Helper
 
+# Date Format YYYY-MM-DDTHH:mm:ssZ
+def date_formatter(year, month, day, time = "11:59:59"):
+	return "{}-{}-{}T{}Z".format(year, month, day, time)
