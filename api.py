@@ -1,5 +1,4 @@
 import requests
-import json
 import config
 
 url = 'https://api.trello.com/1/'
@@ -73,7 +72,6 @@ def get_boards():
 	url = 'https://api.trello.com/1/'
 	url += 'members/me/boards'
 	return get(url)
-create_new_card("TESTING", "2023-01-22T11:59:59Z", get_label_id_by_name())
 
 # Helper
 
