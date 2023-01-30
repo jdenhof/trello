@@ -32,7 +32,7 @@ def post(url, params):
 	
 # Labels
 
-def get_label_id_by_name(boardId = '61f2d57bc0130938a690edd4', name = "personal"):
+def get_label_id_by_name(name = "personal", boardId = '61f2d57bc0130938a690edd4', ):
 	url = 'https://api.trello.com/1/board/{}/labels'.format(boardId)
 
 	response = get(url)
@@ -50,13 +50,13 @@ def create_idLabels_from_names(names):
 
 # Cards
 
-def create_new_card(name, due, idLabels, idList = '61f2d57bc0130938a690edd5'):
+def create_new_card(name, due, label, idList = '61f2d57bc0130938a690edd5'):
 	url = 'https://api.trello.com/1/cards'
-
+	print(due)
 	query['name'] = name
 	query['due'] = due
 	query['idList'] = idList
-	query['idLabels'] = idLabels
+	query['idLabels'] = get_label_id_by_name(label)
 
 	print(post(url, query))
 
@@ -77,4 +77,8 @@ def get_boards():
 
 # Date Format YYYY-MM-DDTHH:mm:ssZ
 def date_formatter(year, month, day, time = "11:59:59"):
+	if len(day) == 1:
+		day = "0" + day
+	if len(month) == 1:
+		month = "0" + month
 	return "{}-{}-{}T{}Z".format(year, month, day, time)
