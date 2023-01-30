@@ -60,6 +60,8 @@ class MainWindow():
         print("Date:", day, month, year)
         print("Description:", description)
 
+        self.description.delete("1.0",tk.END)
+
         api.create_new_card(description, api.date_formatter(year, month, day), course)
 
 
