@@ -16,6 +16,7 @@ def getListOfListOptions() -> list:
     return options
 
 def getListOfLabelOptions(board) -> list:
+    
     return api.getLabelsFromBoard(api.getBoardIdFromName(board))
 
 def getListOfBoardOptions() -> list:

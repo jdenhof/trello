@@ -25,7 +25,7 @@ def call(request, url, params):
 
 # Labels
 
-def getLabelsFromBoard(board):
+def getLabelsFromBoard(boardId):
 	labels = []
 	for label in get('https://api.trello.com/1/board/{}/labels'.format(boardId)):
 		labels.append(label['name'])
@@ -82,9 +82,9 @@ def getListsFromBoard(boardId = '61f2d57bc0130938a690edd4'):
 
 def getBoardIdFromName(board : str):
 
-	for board in getListOfBoards():
-		if board['name'] == board:
-			return board['id']
+	for boardObj in getListOfBoards():
+		if boardObj['name'] == board:
+			return boardObj['id']
 	return 
 
 def getListOfBoardNames():

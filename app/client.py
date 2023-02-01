@@ -21,8 +21,8 @@ class MainWindow():
         # Create a dropdown menu
         tk.Label(self.root, text="Select a label").pack()
         self.label = tk.StringVar()
-        self.label.set("Personal")
-        label_options = service.getListOfLabelOptions(self.board)
+        self.label.set("Label")
+        label_options = service.getListOfLabelOptions(self.board.get())
         self.label_menu = ttk.OptionMenu(self.root, self.label, *label_options)
         self.label_menu.pack()
 
