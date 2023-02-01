@@ -1,13 +1,8 @@
 import requests
 import config
+import debug
 
 url = 'https://api.trello.com/1/'
-boardId = '61f2d57bc0130938a690edd4'
-queueId = '61f2d57bc0130938a690edd5'
-
-headers = {
-  "Accept": "application/json"
-}
 
 query = {
   'key': config.api_key,
@@ -56,7 +51,9 @@ def createNewCard(idList, name, idLabel, due):
 	query['idList'] = idList
 	query['idLabels'] = idLabel
 
-	print(post(url, query))
+	response = post(url, query)
+	if debug.DEBUG:
+		print("id: ", response['id'])
 
 # Lists
 

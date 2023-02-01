@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import service
 from datetime import date
-
+import debug
 
 class MainWindow():
     def __init__(self, root):
@@ -63,13 +63,14 @@ class MainWindow():
     def submit(self):
         # Get selected values from dropdown menus
         card = service.Card(
+            self.board.get(),
             self.list.get(), 
             self.name.get("1.0", "end"), 
-            self.label.get(), 
-            service.dateFormatter(self.day.get(), self.month.get(), self.year.get()))
+            self.label.get(),
+            self.day.get(), self.month.get(), self.year.get())
 
         # Log selected values
-        if DEBUG:
+        if debug.DEBUG:
             print("List:", card.list)
             print("ListId", card.listId)
             print("Label:", card.label)
@@ -81,8 +82,6 @@ class MainWindow():
         self.name.delete("1.0",tk.END)
 
         service.createNewCard(card)
-
-DEBUG = True
 
 if __name__ == "__main__":
     app = MainWindow(tk.Tk())

@@ -1,13 +1,14 @@
 import api
 
 class Card:
-    def __init__(self, list : str, name : str, label : str, due : str):
+    def __init__(self, board : str, list : str, name : str, label : str, day, month, year):
         self.list = list
-        self.listId = api.getListIdByName()
+        self.listId = api.getListIdByName(list)
         self.name = name
         self.label = label
-        self.labelId = api.getLabelIdByName()
-        self.due = due
+        self.labelId = api.getLabelIdByName(label, board)
+        self.due = dateFormatter(year, month, day)
+        self.board = board
 
 def getListOfListOptions() -> list:
     options = []
