@@ -15,70 +15,88 @@ query = {
 }
 
 def get(url, params = []):
-	query.update(query)
-	return requests.request(
-		"GET",
-		url,
-		params = query
-	).json()
+	return call("GET", url, params)
 
 def post(url, params):
-	query.update(query)
+	return call("POST", url, params)
+
+def call(request, url, params):
+	query.update(params)
 	return requests.request(
-		"POST",
+		request,
 		url,
 		params = query
 	).json()
-	
+
 # Labels
 
-def get_label_id_by_name(name = "personal", boardId = '61f2d57bc0130938a690edd4', ):
-	url = 'https://api.trello.com/1/board/{}/labels'.format(boardId)
+def getLabelsFromBoard(board):
+	labels = []
+	for label in get('https://api.trello.com/1/board/{}/labels'.format(boardId)):
+		labels.append(label['name'])
+	return labels
 
-	response = get(url)
 
-	for label in response:
+
+def getLabelIdByName(name, board):
+
+	labels = get('https://api.trello.com/1/board/{}/labels'.format(boardId))
+
+	for label in labels:
 		if label['name'] == name:
 			return label['id']
 
-def create_idLabels_from_names(names):
-	ids = []
-	for name in names:
-		ids.append(get_label_id_by_name(name = name))
-
-	return ids
-
 # Cards
 
-def create_new_card(name, due, label, idList = '61f2d57bc0130938a690edd5'):
+def createNewCard(idList, name, idLabel, due):
 	url = 'https://api.trello.com/1/cards'
-	print(due)
+
 	query['name'] = name
 	query['due'] = due
 	query['idList'] = idList
-	query['idLabels'] = get_label_id_by_name(label)
+	query['idLabels'] = idLabel
 
 	print(post(url, query))
 
 # Lists
 
-def get_lists_from_board(boardId):
+def getListsByName():
+
+	lstNames = []
+	
+	for list in getListsFromBoard():
+		lstNames.append(list['name'])
+
+	return lstNames
+
+def getListIdByName(name):
+
+	for list in getListsFromBoard():
+		if list['name'] == name:
+			return list['id']
+	# Current Queue ID
+	return '61f2d57bc0130938a690edd5'
+
+def getListsFromBoard(boardId = '61f2d57bc0130938a690edd4'):
 	url = "https://api.trello.com/1/boards/{}/lists".format(boardId)
 	return get(url)
 
 # Boards
 
-def get_boards():
-	url = 'https://api.trello.com/1/'
-	url += 'members/me/boards'
+def getBoardIdFromName(board : str):
+
+	for board in getListOfBoards():
+		if board['name'] == board:
+			return board['id']
+	return 
+
+def getListOfBoardNames():
+	names = []
+	for board in getListOfBoards():
+		if board['closed'] == False:
+			names.append(board['name'])
+	return names
+
+def getListOfBoards():
+	url = 'https://api.trello.com/1/members/me/boards'
 	return get(url)
-
-# Helper
-
-# Date Format YYYY-MM-DDTHH:mm:ssZ
-def date_formatter(year, month, day, time = "11:59:59"):
-	if len(day) == 1:
-		day = "0" + day
-	if len(month) == 1:
-		month = "0" + month
-	return "{}-{}-{}T{}Z".format(year, month, day, time)
